@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Especialidad;
+use App\Models\Ciclo;
+use App\Models\Modulos;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,9 +18,48 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
-        //
+        self::seedEspecialidades();
+        $this->command->info('Tabla productos inicializada con datos!');
+        self::seedCiclos();
+        $this->command->info('Tabla productos inicializada con datos!');
+        self::seedModulos();
+        $this->command->info('Tabla productos inicializada con datos!');
         Schema::enableForeignKeyConstraints();
     }
+
+
+    static private function seedEspecialidades(){
+        Especialidad::truncate();
+        foreach( self::$arrayEspecialidades as $especialidad ) {
+            $p = new Especialidad;
+            $p->nombre = $especialidad;
+            $p->save();
+        }
+    }
+
+    static private function seedCiclos(){
+        Ciclo::truncate();
+        foreach( self::$arrayCiclos as $ciclo ) {
+            $p = new Ciclo;
+            $p->grado = $ciclo["grado"];
+            $p->nombre = $ciclo["nombre"];
+            $p->save();
+        }
+    }
+
+    static private function seedModulos(){
+        Modulos::truncate();
+        foreach( self::$arrayModulos as $modulo ) {
+            if ($modulo["ciclo"]=="6"){
+                $p = new Modulos;
+                $p->nombre = $modulo["nombre"];
+                $p->especialidad_id = $modulo["especialidad"];
+                $p->ciclo_id = $modulo["ciclo"];
+                $p->save();
+            }
+        }
+    }
+
 
     private static $arrayEspecialidades = ['Informática', 'Sistemas y Aplicaciones Informáticas'];
 
